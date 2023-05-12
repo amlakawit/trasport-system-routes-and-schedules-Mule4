@@ -1,0 +1,12 @@
+http:
+  listner:
+    host: "localhost"
+    port: "8081"
+    path: "/travelOnTip/{service}"
+
+mysql:
+  host: "localhost"
+  port: "3306"
+  user: "root"
+  password: "nateyMahder@2022"
+  database: "travelOnTip"

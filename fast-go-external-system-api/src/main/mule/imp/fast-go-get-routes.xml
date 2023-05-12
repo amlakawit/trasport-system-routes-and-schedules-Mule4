@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<sub-flow name="fast-go-get-routes-impSubFlow" doc:id="872077a7-e59d-4edb-bc97-1e9c389e872a" >
+		<db:select doc:name="Get Routes" doc:id="a575aba5-8d0a-44a3-8931-23b715d173ef" config-ref="FastGo_Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM routes
+]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Retruned Payload to JSON" doc:id="58c2d825-5309-4ea5-be35-71224e9cca5b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>	
+	
+</mule>

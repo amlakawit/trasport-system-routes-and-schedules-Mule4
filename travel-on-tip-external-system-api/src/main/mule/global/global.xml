@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="53581ff0-7a52-4a44-b94f-5bc9f034b41c" file="config\local.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ee3dd76f-471b-45a8-96d9-824dfbba82c7" >
+		<http:listener-connection host="${http.listner.host}" port="${http.listner.port}" />
+	</http:listener-config>
+	<db:config name="TravelOnTip_Database_Config" doc:name="Database Config" doc:id="62a88141-fa23-4fc5-88fe-3fce258864ad" >
+		<db:my-sql-connection host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.database}" />
+	</db:config>
+</mule>

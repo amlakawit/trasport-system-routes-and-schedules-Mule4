@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	
+<flow name="tavel-on-tipFlow" doc:id="c3772eaa-b59e-4d82-b576-23dfcf75ee89" >
+		<http:listener doc:name="GET: /fastGo/{service}" doc:id="23d40669-37db-4884-acde-88d2a72a9860" config-ref="HTTP_Listener_config" path="${http.listner.path}">
+			<http:error-response statusCode="#[vars.errStatusCode]" >
+				<http:body ><![CDATA[#[vars.errorMsg]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="set vars TransactionI and service" doc:id="a8bb16c8-541f-4086-a50a-b87f464da001" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="service" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.uriParams.service]]></ee:set-variable>
+				<ee:set-variable variableName="TranssactionId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.headers.transactionId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0d62e2a2-a848-469a-b6a8-6dc5c4e6565e" message="FastGo External API: Request received; TransactionId = #[attributes.headers.transactionId]"/>
+		<choice doc:name="Choice" doc:id="fc9fac31-a3cb-41d0-8415-a6e0c313ec62">
+			<when expression='#[vars.service =="routes"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="952dc601-29a8-42e5-ac29-ca2603b180a2" message="FastGo External API: Request being sent to GetRoutes; TransactionId = #[vars.TranssactionId]"/>
+				<flow-ref doc:name="To Get Routes Subflow" doc:id="1425ce9b-358f-4510-a903-53b735a57b81" name="fast-go-get-routes-impSubFlow"/>
+			</when>
+			<when expression='#[vars.service == "schedules"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="eb7b086c-5df8-4545-a229-c6a85a2cd80e" message="FastGo External API: Request being sent to GetSchedules; TransactionId = #[vars.TranssactionId]"/>
+				<flow-ref doc:name="To Get Schedules Subflow" doc:id="c6cdcfcb-f3c2-40d6-bacf-a189039a4519" name="fast-go-get-schedules-impSubFlow"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="8077e5a5-8885-41b1-9db2-450d2b5bbb0f" message="FastGo External API: No mactching service; TransactionId = #[vars.TranssactionId]" />
+				<ee:transform doc:name="Set default Payload" doc:id="ff8acdce-4981-41a2-bdc3-fb0ea28b547e">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Requested service doesn't exist'"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="d54252a7-ea16-4aca-9377-5d89b42780d2" message="FastGo External API: Retruning to calling application; TransactionId = #[vars.TranssactionId]"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9e8ced24-8502-4b86-acb9-179f60ef43ae" >
+				<logger level="INFO" doc:name="Logger" doc:id="fee90090-687a-408e-9ec0-514ccaf224bb" message="FastGo External API: ERROR, cause = #[error.detailedDescription] ;TransactionId = #[vars.TranssactionId]"/>
+				<ee:transform doc:name="Set Err msg and code" doc:id="053ea76f-9c65-4524-9a28-42814122a01c" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="errorMsg" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Error Message": "Error in external system"
+}]]></ee:set-variable>
+						<ee:set-variable variableName="errStatusCode" ><![CDATA[%dw 2.0
+output application/json
+---
+500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>	
+	
+	
+</mule>
