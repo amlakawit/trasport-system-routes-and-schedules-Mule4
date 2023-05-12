@@ -1,0 +1,297 @@
+#%RAML 1.0
+title: Transport Module XPAPI
+description: Retrieves and consalidates routes and schedules 
+
+/booking:
+  /{transportType}:
+    /routes:
+      get:
+        headers:
+          transactionId:
+            required: true
+            type: string
+            example: "k30djd-20kodk-lslssl-34559e"
+        queryParameters:
+          campanyName:
+            required: false
+            type: string
+            example: "FastGo"
+          departureLocation:
+            required: false
+            type: string
+            example: "BEN"
+          destinationLocation:
+            required: false
+            type: string
+            example: "BEN"
+        responses:
+          200:
+            body:
+              application/json:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    companyCode:
+                      type: string
+                      example: "Transnational"
+                    orginaLocation:
+                      type: object
+                      properties:
+                        locationCode:
+                          type: string
+                          example: "BEN-SG"
+                        locationDesc:
+                          type: string
+                          example: "Beauna Vista Singapore"
+                    destinationLocation:
+                      type: object
+                      properties:
+                        locationCode:
+                          type: string
+                          example: "KLG-MY"
+                        locationDesc:
+                          type: string
+                          example: "Klang Malaysia"   
+				example:
+					[
+					  {
+						"companyCode": "Transnational",
+						"orginaLocation": {
+						  "locationCode": "BEN-SG",
+						  "locationDesc": "Beauna Vista Singapore"
+						},
+						"destinationLocation": {
+						  "locationCode": "KLG-MY",
+						  "locationDesc": "Klang Malaysia"
+						}
+					  },
+					  {
+						"companyCode": "Transnational",
+						"orginaLocation": {
+						  "locationCode": "BEN-SG",
+						  "locationDesc": "Beauna Vista Singapore"
+						},
+						"destinationLocation": {
+						  "locationCode": "KLG-MY",
+						  "locationDesc": "Klang Malaysia"
+						}
+					  },
+					  {
+						"companyCode": "Transnational",
+						"orginaLocation": {
+						  "locationCode": "BEN-SG",
+						  "locationDesc": "Beauna Vista Singapore"
+						},
+						"destinationLocation": {
+						  "locationCode": "KLG-MY",
+						  "locationDesc": "Klang Malaysia"
+						}
+					  }
+					]				
+							
+          400:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Bad Request"
+                example:
+                  {
+                    "status": 400,
+                    "message": "Bad Request"
+                  }
+                  
+          404:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "Not Found"
+                example:
+                  {
+                    "status": 404,
+                    "message": "Not Found"
+                  }
+          500:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: "Server Error"
+                example:
+                  {  "status": 500,
+                    "message": "Server Error" }               
+    
+    /schedules:
+      get:
+        headers:
+          transactionId:
+            required: true
+            type: string
+            example: "k30djd-20kodk-lslssl-34559e"                     
+        queryParameters:
+          companyName:
+            required: false
+            type: string
+            example: "FastGo"
+          departureLocation:
+            required: false
+            type: string
+            example: "SG"   
+          destinationLocation:
+            required: false
+            type: string
+            example: "KLG"
+          requestTimezone:
+            required: false
+            type: string
+            example: "0800"
+        responses:
+          200:
+            body:
+              application/json:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    companyName:
+                      type: string
+                      example: "FastGo"
+                    availableSeats:
+                      type: integer
+                      example: 30
+                    departureDateTime:
+                      type: string
+                      example: "2023-06-30T18:41:41"                             
+                    travelRoute:
+                      type: object
+                      properties:
+                        destinationLocation:
+                          type: object
+                          properties:
+                            locationCode:
+                              type: string
+                              example: "KLG-MY"
+                            locationDesc:
+                              type: string
+                              example: "Klang Malaysia"                                
+                        orginaLocation:
+                          type: object
+                          properties:
+                            locationCode:
+                              type: string
+                              example: "BEN-SG"
+                            locationDesc:
+                              type: string
+                              example: "Beauna Vista Singapore"                                      
+                example:
+					[
+					  {
+						"companyName": "FastGo",
+						"availableSeats": 30,
+						"departureDateTime": "2023-06-30T18:41:41",
+						"travelRoute": {
+						  "destinationLocation": {
+							"locationCode": "KLG-MY",
+							"locationDesc": "Klang Malaysia"
+						  },
+						  "orginaLocation": {
+							"locationCode": "BEN-SG",
+							"locationDesc": "Beauna Vista Singapore"
+						  }
+						}
+					  },
+					  {
+						"companyName": "FastGo",
+						"availableSeats": 30,
+						"departureDateTime": "2023-06-30T18:41:41",
+						"travelRoute": {
+						  "destinationLocation": {
+							"locationCode": "KLG-MY",
+							"locationDesc": "Klang Malaysia"
+						  },
+						  "orginaLocation": {
+							"locationCode": "BEN-SG",
+							"locationDesc": "Beauna Vista Singapore"
+						  }
+						}
+					  },
+					  {
+						"companyName": "FastGo",
+						"availableSeats": 30,
+						"departureDateTime": "2023-06-30T18:41:41",
+						"travelRoute": {
+						  "destinationLocation": {
+							"locationCode": "KLG-MY",
+							"locationDesc": "Klang Malaysia"
+						  },
+						  "orginaLocation": {
+							"locationCode": "BEN-SG",
+							"locationDesc": "Beauna Vista Singapore"
+						  }
+						}
+					  }
+					]				
+          400:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Bad Request"
+                example:
+                  {
+                    "status": 400,
+                    "message": "Bad Request"
+                  }
+                  
+          404:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "Not Found"
+                example:
+                  {
+                    "status": 404,
+                    "message": "Not Found"
+                  }
+          500:
+            body:
+              application/json:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: "Server Error"
+                example:
+                  {  "status": 500,
+                    "message": "Server Error" }
